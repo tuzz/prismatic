@@ -1,0 +1,21 @@
+[package]
+name = "prismatic"
+description = "An experimental Rust crate for decomposing the initialization of structs."
+version = "0.1.0"
+authors = ["Chris Patuzzo <chris@patuzzo.co.uk>"]
+documentation = "https://github.com/tuzz/prismatic"
+homepage = "https://github.com/tuzz/prismatic"
+repository = "https://github.com/tuzz/prismatic"
+readme = "README.md"
+license = "MIT"
+
+[lib]
+proc-macro = true
+
+[dependencies]
+proc-macro2 = "0.4"
+quote = "0.6"
+
+[dependencies.syn]
+version = "0.14"
+features = ["full"]
