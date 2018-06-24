@@ -1,7 +1,7 @@
 [package]
 name = "prismatic"
 description = "An experimental Rust crate for decomposing the initialization of structs."
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Chris Patuzzo <chris@patuzzo.co.uk>"]
 documentation = "https://github.com/tuzz/prismatic"
 homepage = "https://github.com/tuzz/prismatic"

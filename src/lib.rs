@@ -5,7 +5,7 @@ extern crate proc_macro2;
 extern crate syn;
 
 use proc_macro::TokenStream;
-use proc_macro2::{Ident, TokenTree::Literal};
+use proc_macro2::{Ident, Span, TokenTree::Literal};
 use syn::{
     parse_str,
     Data::Struct,
@@ -27,18 +27,20 @@ pub fn prismatic(input: TokenStream) -> TokenStream {
     let types = struct_types(&fields);
     let signature = sig_attribute(&ast);
     let params = sig_params(&signature);
+    let setters = setter_names(&members);
 
-    generate_code(&name, &members, &types, &signature, &params)
+    generate_code(&name, &members, &types, &signature, &params, &setters)
 }
 
-fn generate_code(name: &Ident, members: &[&Ident], types: &[&Type], signature: &[FnArg], params: &[&Ident]) -> TokenStream {
+fn generate_code(name: &Ident, members: &[&Ident], types: &[&Type], signature: &[FnArg],
+                 params: &[&Ident], setters: &[Ident]) -> TokenStream {
+
     let members2 = &(*members);
     let members3 = &(*members);
-    let members4 = &(*members);
 
     let code = quote! {
         impl #name {
-            fn new(#(#signature),*) -> Self {
+            pub fn new(#(#signature),*) -> Self {
                 let mut init = Init::default();
                 init.init(#(#params),*);
 
@@ -51,7 +53,19 @@ fn generate_code(name: &Ident, members: &[&Ident], types: &[&Type], signature: &
 
         #[derive(Default)]
         struct Init {
-            #(#members4: Option<#types>),*
+            #(#members: Option<#types>),*
+        }
+
+        #[allow(dead_code)]
+        impl Init {
+            #(fn #members(&self) -> &#types {
+                self.#members2.as_ref()
+                    .expect(stringify!(#members3 has not been initialized))
+            })*
+
+            #(fn #setters(&mut self, #members: #types) {
+                self.#members2 = Some(#members3);
+            })*
         }
     };
 
@@ -122,4 +136,10 @@ fn sig_params(signature: &[FnArg]) -> Vec<&Ident> {
     });
 
     options.map(|o| o.unwrap()).collect()
+}
+
+fn setter_names<'a>(members: &'a [&'a Ident]) -> Vec<Ident> {
+    members.iter().map(|m|
+        Ident::new(&format!("set_{}", m), Span::call_site())
+    ).collect()
 }
