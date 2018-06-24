@@ -2,17 +2,18 @@
 extern crate prismatic;
 
 #[derive(New)]
+#[allow(dead_code)]
 struct Color {
-    _red: usize,
-    _green: usize,
-    _blue: usize,
+    red: usize,
+    green: usize,
+    blue: usize,
 }
 
 impl Init {
     fn init(&mut self) {
-        self._red = Some(100);
-        // self._green              <-- this field is uninitialized
-        self._blue = Some(200);
+        self.red = Some(100);
+        // self.green              <-- this field is uninitialized
+        self.blue = Some(200);
     }
 }
 

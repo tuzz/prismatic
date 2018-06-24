@@ -53,6 +53,21 @@ fn generate_code(name: &Ident, members: &[&Ident], types: &[&Type], signature: &
         struct Init {
             #(#members4: Option<#types>),*
         }
+
+        #[allow(dead_code)]
+        impl Init {
+//            fn set_red(&mut self, red: usize) {
+//                self.red = Some(red);
+//            }
+//
+//            fn set_green(&mut self, green: usize) {
+//                self.green = Some(green);
+//            }
+//
+//            fn red(&self) -> &usize {
+//                self.red.as_ref().unwrap()
+//            }
+        }
     };
 
     code.into()
